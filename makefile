@@ -1,5 +1,3 @@
-export LD_LIBRARY_PATH=/home/talya/Documents/vs\ code\ c/mylibs:$LD_LIBRARY_PATH
-
 CC = gcc
 CFLAGS = -Wall -g
 
@@ -7,12 +5,12 @@ LOOP_SOURCES = advancedClassificationLoop.o basicClassification.o
 RECURSIVE_SOURCE = advancedClassificationRecursion.o basicClassification.o
 
 all: recursives recursived loops loopd mains maindloop maindrec
-maindloop: main.o libclassloops.so
-	$(CC) $(CFLAGS) -o maindloop main.o libclassloops.so
-maindrec: main.o libclassrec.so
-	$(CC) $(CFLAGS) -o maindrec main.o libclassrec.so
+maindloop: libclassloops.so
+	$(CC) $(CFLAGS) main.o ./libclassloops.so -o maindloop
+maindrec: libclassrec.so
+	$(CC) $(CFLAGS) main.o ./libclassrec.so -o maindrec
 mains: main.o libclassrec.a
-	$(CC) $(CFLAGS) -o mains main.o libclassrec.a
+	$(CC) $(CFLAGS) -o mains main.o ./libclassrec.a
 
 main.o: main.c NumClass.h
 	$(CC) $(CFLAGS) -c main.c
@@ -23,10 +21,10 @@ loops: $(LOOP_SOURCES)
 recursives : $(RECURSIVE_SOURCE)
 	ar -rcs libclassrec.a $(RECURSIVE_SOURCE)
 recursived: $(RECURSIVE_SOURCE)
-	$(CC) -shared -o libclassrec.so $(RECURSIVE_SOURCE)
+	$(CC) -Wall -shared -o libclassrec.so -fPIC $(RECURSIVE_SOURCE)
 
 loopd: $(LOOP_SOURCES)
-	$(CC) -shared -o libclassloops.so $(LOOP_SOURCES)
+	$(CC) -Wall -shared -o libclassloops.so -fPIC $(LOOP_SOURCES)
 
 basicClassification.o: basicClassification.c NumClass.h
 	$(CC) $(CFLAGS) -c basicClassification.c
